@@ -1,0 +1,57 @@
+# ========================
+# Node.js
+# ========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# ========================
+# Variables de entorno
+# ========================
+.env
+.env.local
+.env.production
+.env.*.local
+
+# ========================
+# Testing y cobertura
+# ========================
+coverage/
+.nyc_output/
+
+# ========================
+# Build / compilados
+# ========================
+dist/
+build/
+
+# ========================
+# Logs
+# ========================
+logs/
+*.log
+
+# ========================
+# Sistema Operativo
+# ========================
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+._*
+
+# ========================
+# IDEs / Editores
+# ========================
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ========================
+# Temporales
+# ========================
+tmp/
+temp/
+.cache/
