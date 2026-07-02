@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Gestión de estudiantes — Universidad Tecnológica XYZ. Registrar, consultar, actualizar y eliminar estudiantes." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="author" content="Universidad Tecnológica XYZ" />
+  <meta name="theme-color" content="#0f2044" />
+  <title>Estudiantes | Universidad Tecnológica XYZ</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+  <link href="css/styles.css" rel="stylesheet" />
+</head>
+
+<body>
+
+  <!-- ═══════════════ SIDEBAR ═══════════════ -->
+  <aside class="sidebar" id="sidebar" role="navigation" aria-label="Menú principal">
+    <div class="sidebar-brand">
+      <div class="brand-emblem" aria-hidden="true">🎓</div>
+      <div class="brand-text">
+        <strong>Univ. Tecnológica XYZ</strong>
+        <span>Sistema Académico</span>
+      </div>
+      <button class="sidebar-collapse-btn" onclick="toggleSidebarCollapse()" aria-label="Contraer u expandir menú"
+        title="Contraer menú">
+        <i class="bi bi-chevron-left" aria-hidden="true"></i>
+      </button>
+    </div>
+    <nav aria-label="Navegación principal">
+      <p class="nav-label">Principal</p>
+      <a href="/" class="nav-link-custom">
+        <i class="bi bi-grid-fill" aria-hidden="true"></i>
+        <span class="link-text">Dashboard</span>
+      </a>
+      <p class="nav-label" style="margin-top:8px">Gestión Académica</p>
+      <a href="/students" class="nav-link-custom">
+        <i class="bi bi-people-fill" aria-hidden="true"></i>
+        <span class="link-text">Estudiantes</span>
+        <span class="nav-badge" id="sb-student-count">—</span>
+      </a>
+      <a href="/courses" class="nav-link-custom">
+        <i class="bi bi-journal-bookmark-fill" aria-hidden="true"></i>
+        <span class="link-text">Cursos</span>
+        <span class="nav-badge" id="sb-course-count">—</span>
+      </a>
+      <hr class="sidebar-divider" />
+      <p class="nav-label">Sistema</p>
+      <a href="/services" class="nav-link-custom">
+        <i class="bi bi-heart-pulse-fill" aria-hidden="true"></i>
+        <span class="link-text">Estado de Servicios</span>
+      </a>
+    </nav>
+    <div class="sidebar-footer" role="contentinfo">
+      <strong>Universidad Tecnológica XYZ</strong><br>
+      Panel Administrativo · 2026
+    </div>
+  </aside>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebarMobile()"></div>
+
+  <!-- ═══════════════ MAIN ═══════════════ -->
+  <div class="layout-main">
+    <header class="topbar" role="banner">
+      <button class="topbar-btn topbar-hamburger" onclick="toggleSidebarMobile()" aria-label="Abrir menú de navegación">
+        <i class="bi bi-list" aria-hidden="true"></i>
+      </button>
+      <div class="topbar-left">
+        <p class="topbar-page-title">Gestión de Estudiantes</p>
+        <nav class="topbar-breadcrumb" aria-label="Ruta de navegación">
+          <a href="/"><i class="bi bi-house-fill" aria-hidden="true"></i> Inicio</a>
+          <i class="bi bi-chevron-right" aria-hidden="true"></i>
+          <span aria-current="page">Estudiantes</span>
+        </nav>
+      </div>
+      <div class="topbar-actions">
+        <time id="current-date" class="d-none d-md-block" style="font-size:.75rem;color:#64748b"></time>
+        <button class="topbar-btn" onclick="loadStudents()" title="Actualizar lista"
+          aria-label="Actualizar lista de estudiantes">
+          <i class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+        </button>
+        <div class="topbar-user" role="button" tabindex="0" aria-label="Menú de usuario">
+          <div class="topbar-avatar" aria-hidden="true">AD</div>
+          <div class="d-none d-md-block">
+            <div class="topbar-user-name">Administrador</div>
+            <div class="topbar-user-role">Sistema Académico</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="page-content" id="main-content">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">
+            Estudiantes Registrados
+            <span class="count-pill" id="student-count-pill" aria-label="Total">0</span>
+          </h1>
+          <p class="page-subtitle">Administra el padrón académico de estudiantes de la universidad</p>
+        </div>
+        <button class="btn-pro" onclick="openCreateModal()" aria-label="Registrar nuevo estudiante">
+          <i class="bi bi-plus-circle-fill" aria-hidden="true"></i>
+          Nuevo Estudiante
+        </button>
+      </div>
+
+      <!-- Tabla principal -->
+      <section class="content-card fade-up" aria-label="Lista de estudiantes">
+        <header class="card-header-custom">
+          <h2 class="card-title-custom">
+            <i class="bi bi-people-fill" aria-hidden="true"></i>
+            Padrón de Estudiantes
+          </h2>
+          <div class="search-wrap">
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <label for="search-input" class="visually-hidden">Buscar estudiante</label>
+            <input type="search" id="search-input" class="search-input" placeholder="Buscar por nombre, código..."
+              oninput="filterStudents(this.value)" aria-label="Buscar estudiante" />
+          </div>
+        </header>
+        <div class="card-body-custom">
+          <div class="table-responsive">
+            <table class="table-pro" id="students-table" aria-label="Tabla de estudiantes">
+              <thead>
+                <tr>
+                  <th scope="col" style="width:44px">#</th>
+                  <th scope="col">Estudiante</th>
+                  <th scope="col">Código</th>
+                  <th scope="col">Carrera</th>
+                  <th scope="col">Registro</th>
+                  <th scope="col" style="text-align:center;width:110px">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="students-table-body">
+                <tr>
+                  <td colspan="6" class="table-loading">
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Cargando estudiantes...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- ════ MODAL CREAR / EDITAR ════ -->
+  <div class="modal fade modal-pro" id="studentModal" tabindex="-1" role="dialog" aria-labelledby="student-modal-title"
+    aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2 class="modal-title" id="student-modal-title">
+            <i class="bi bi-person-plus-fill" aria-hidden="true"></i>
+            <span id="modal-title">Nuevo Estudiante</span>
+          </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar formulario"></button>
+        </header>
+
+        <div class="modal-body">
+          <input type="hidden" id="student-id" />
+          <div class="row g-3">
+            <div class="col-md-5">
+              <div class="field-group">
+                <label class="field-label" for="f-codigo">
+                  Código <span class="req" aria-hidden="true">*</span>
+                </label>
+                <input type="text" id="f-codigo" class="field-input" placeholder="EST001" maxlength="10"
+                  oninput="this.value = this.value.toUpperCase()" autocomplete="off" aria-required="true"
+                  aria-describedby="err-codigo" />
+                <p class="field-error" id="err-codigo" role="alert"></p>
+              </div>
+            </div>
+
+            <div class="col-md-7">
+              <div class="field-group">
+                <label class="field-label" for="f-carrera">
+                  Carrera <span class="req" aria-hidden="true">*</span>
+                </label>
+                <select id="f-carrera" class="field-select" aria-required="true" aria-describedby="err-carrera">
+                  <option value="">Seleccionar carrera...</option>
+                  <option>Ingeniería de Sistemas</option>
+                  <option>Ingeniería de Software</option>
+                  <option>Ingeniería Civil</option>
+                  <option>Administración de Empresas</option>
+                  <option>Contabilidad</option>
+                  <option>Medicina Humana</option>
+                  <option>Derecho</option>
+                  <option>Arquitectura</option>
+                </select>
+                <p class="field-error" id="err-carrera" role="alert"></p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="field-group">
+                <label class="field-label" for="f-nombres">
+                  Nombres <span class="req" aria-hidden="true">*</span>
+                </label>
+                <input type="text" id="f-nombres" class="field-input" placeholder="Juan Carlos"
+                  autocomplete="given-name" aria-required="true" aria-describedby="err-nombres" />
+                <p class="field-error" id="err-nombres" role="alert"></p>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="field-group">
+                <label class="field-label" for="f-apellidos">
+                  Apellidos <span class="req" aria-hidden="true">*</span>
+                </label>
+                <input type="text" id="f-apellidos" class="field-input" placeholder="García López"
+                  autocomplete="family-name" aria-required="true" aria-describedby="err-apellidos" />
+                <p class="field-error" id="err-apellidos" role="alert"></p>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="field-group">
+                <label class="field-label" for="f-correo">
+                  Correo Institucional <span class="req" aria-hidden="true">*</span>
+                </label>
+                <input type="email" id="f-correo" class="field-input" placeholder="juan.garcia@universidad.edu.pe"
+                  autocomplete="email" aria-required="true" aria-describedby="err-correo" />
+                <p class="field-error" id="err-correo" role="alert"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="modal-footer">
+          <button type="button" class="btn btn-light px-4 rounded-2" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn-pro" onclick="saveStudent()" id="save-btn">
+            <i class="bi bi-check-circle-fill" aria-hidden="true"></i>
+            Guardar Estudiante
+          </button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ MODAL VER DETALLE ════ -->
+  <div class="modal fade modal-pro" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="view-modal-title"
+    aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <header class="modal-header">
+          <h2 class="modal-title" id="view-modal-title">
+            <i class="bi bi-person-badge-fill" aria-hidden="true"></i>
+            Detalle del Estudiante
+          </h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar detalle"></button>
+        </header>
+        <div class="modal-body" id="view-modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════ MODAL ELIMINAR ════ -->
+  <div class="modal fade modal-delete" id="deleteModal" tabindex="-1" role="alertdialog"
+    aria-labelledby="delete-modal-title" aria-describedby="delete-modal-desc" aria-modal="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="delete-icon-wrap" aria-hidden="true">
+            <i class="bi bi-trash3-fill"></i>
+          </div>
+          <h2 id="delete-modal-title" style="font-size:.95rem;font-weight:700;color:var(--navy);margin-bottom:7px">
+            ¿Eliminar estudiante?
+          </h2>
+          <p id="delete-modal-desc" style="font-size:.81rem;color:#64748b">
+            Esta acción es permanente. Se eliminará a
+            <strong id="delete-student-name"></strong> del sistema.
+          </p>
+        </div>
+        <footer class="modal-footer">
+          <button class="btn btn-light px-4 rounded-2" data-bs-dismiss="modal">Cancelar</button>
+          <button class="btn btn-danger px-4 rounded-2" onclick="confirmDelete()" id="confirm-delete-btn">
+            <i class="bi bi-trash3 me-1" aria-hidden="true"></i> Eliminar
+          </button>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/students.js"></script>
+</body>
+
+</html>
