@@ -100,13 +100,11 @@ Archivos generados:
 
 ### 3. Configurar la base de datos
 
-```bash
-psql -U postgres -c "CREATE DATABASE universidad_db;"
-psql -U postgres -c "CREATE DATABASE universidad_test_db;"
-npm run db:schema
-npm run db:seed
-psql -U postgres -d universidad_test_db -f backend/database/schema.sql
-```
+    psql -U postgres -c "CREATE DATABASE universidad_db;"
+    psql -U postgres -c "CREATE DATABASE universidad_test_db;"
+    npm run db:schema
+    npm run db:seed
+    psql -U postgres -d universidad_test_db -f backend/database/schema.sql
 
 ### 6. Iniciar TODO el proyecto (una sola terminal)
 
@@ -116,12 +114,10 @@ Abre [http://localhost:4000](http://localhost:4000) en el navegador.
 
 ## 🧪 Testing
 
-```bash
-npm run test            # Todos los tests (student + course)
-npm run test:students   # Solo student-service
-npm run test:courses    # Solo course-service
-npm run test:unit       # Solo pruebas unitarias
-```
+    npm run test            # Todos los tests (student + course)
+    npm run test:students   # Solo student-service
+    npm run test:courses    # Solo course-service
+    npm run test:unit       # Solo pruebas unitarias
 
 ## 🌐 URLs del sistema
 
