@@ -1,0 +1,42 @@
+{
+  "name": "universidadXYZ",
+  "version": "1.0.0",
+  "description": "Monorepo — Plataforma Académica Universidad Tecnológica XYZ",
+  "private": true,
+  "workspaces": [
+    "backend/student-service",
+    "backend/course-service",
+    "backend/api-gateway",
+    "frontend"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/check-envs.cjs",
+    "dev": "concurrently --kill-others-on-fail -p \"[{name}]\" --prefix-colors \"green,yellow,magenta,cyan\" -n \"STUDENTS,COURSES,GATEWAY,FRONTEND\" \"npm run dev --workspace=backend/student-service\" \"npm run dev --workspace=backend/course-service\" \"npm run dev:gateway:safe\" \"npm run dev:frontend:safe\"",
+    "dev:gateway:safe": "wait-on tcp:3001 tcp:3002 && npm run dev --workspace=backend/api-gateway",
+    "dev:frontend:safe": "wait-on tcp:3000 && npm run dev --workspace=frontend",
+    "dev:backend": "concurrently --kill-others-on-fail -p \"[{name}]\" --prefix-colors \"green,yellow,magenta\" -n \"STUDENTS,COURSES,GATEWAY\" \"npm run dev --workspace=backend/student-service\" \"npm run dev --workspace=backend/course-service\" \"npm run dev:gateway:safe\"",
+    "dev:students": "npm run dev --workspace=backend/student-service",
+    "dev:courses": "npm run dev --workspace=backend/course-service",
+    "dev:gateway": "npm run dev --workspace=backend/api-gateway",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "test": "npm run test --workspace=backend/student-service && npm run test --workspace=backend/course-service",
+    "test:students": "npm run test --workspace=backend/student-service",
+    "test:courses": "npm run test --workspace=backend/course-service",
+    "test:unit": "npm run test:unit --workspace=backend/student-service && npm run test:unit --workspace=backend/course-service",
+    "build": "npm run build --workspace=frontend",
+    "preview": "npm run preview --workspace=frontend",
+    "setup:envs": "node scripts/setup-envs.cjs",
+    "check:envs": "node scripts/check-envs.cjs",
+    "db:schema": "psql -U postgres -d universidad_db -f backend/database/schema.sql",
+    "db:seed": "psql -U postgres -d universidad_db -f backend/database/seed.sql",
+    "db:setup": "npm run db:schema && npm run db:seed"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3",
+    "wait-on": "^9.0.10"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}
